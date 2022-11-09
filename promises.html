@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    see console
+
+    <script>
+
+        // Promises are functions that return a Promise object.
+        // A promise object consists of two functions: resolve and reject
+
+        function wait(ms){
+            return new Promise(function(resolve, reject){
+                // reject('my message');
+                return setTimeout(() => {
+                    resolve(new Date());
+                }, ms);
+            });
+        }
+
+        //const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+        // const wait = (ms) => {return new Promise(resolve => {return setTimeout(resolve, ms)})};
+
+        wait(3 * 1000)
+            .then(() => {
+                console.log('3 seconds has passed.')
+
+                // throw an error to skip the upcoming then()s
+                //throw new Error('Don\'t feel like waiting anymore...');
+
+                // return another promise to keep the chain going
+                return wait(2 * 1000);
+            })
+            .then((date) => {
+                console.log('2 seconds has passed.', date)
+            })
+            //.then(() => {return wait(2 * 1000)})
+            .then(() => wait(2 * 1000))
+            .then(() => console.log('another 2 seconds has passed.'))
+            .catch(error => {
+                console.error('An error happened: ', error);
+            })
+            .finally(() => {
+                // clear loading screen
+                console.log('All finished');
+            })
+        ;
+
+
+        Promise.any([
+            wait(2000),
+            wait(4000),
+        ]).then(()=>{
+            // this run after 2 seconds
+        })
+
+        Promise.all([
+            wait(2000),
+            wait(4000),
+        ]).then(()=>{
+            // this run after 4 seconds
+        })
+
+        console.log('End of the file.');
+
+    </script>
+
+</body>
+</html>
